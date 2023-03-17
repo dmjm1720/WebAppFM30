@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <script src="../resources/js/validar.js" type="text/javascript"></script>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/Template.xhtml">
+
+            <ui:define name="content">
+
+                <!--Formulario principal-->
+
+                <h:form id="frmPrincipal">
+                    <p:growl id="msgs" showDetail="true"
+                             skipDetailIfEqualsSummary="true" />
+
+                    <div style="text-align: center">
+                        <p:badge value="GASTOS CAPTURADOS | PÓLIZAS" styleClass="etiqueta" />
+                    </div>
+                    <p:commandButton value="Descargar reporte" icon="pi pi-download" styleClass="etiqueta">
+                        <p:dataExporter type="xls" target="tblCaptura" fileName="reporte"/>
+                    </p:commandButton>
+                    <p:dataTable id="tblCaptura" styleClass="tabla" reflow="true"
+                                 scrollable="true" scrollHeight="600"
+                                 paginator="true"
+                                 paginatorPosition="top"
+                                 var="c" 
+                                 value="#{captura.listaCapturaEnviado}" 
+                                 emptyMessage="NO HAY REGISTROS AGREGADOS">
+
+                        <p:column headerText="TIPO DE SOLICITUD">
+                            <h:outputText value="#{c.tipoSolicitud}"/>
+                        </p:column>
+                        <p:column headerText="FOLIO">
+                            <h:outputText value="#{c.folio}"/>
+                        </p:column>
+
+                        <p:column headerText="FECHA">
+                            <h:outputText value="#{c.fecha}"/>
+                        </p:column>
+
+                        <p:column headerText="CONCEPTO DEL GASTO">
+                            <h:outputText value="#{c.conceptoGasto}"/>
+                        </p:column>
+
+                        <p:column headerText="TOTAL EN MN">
+                            <h:outputText value="#{c.importeTotalMx}"/>
+                        </p:column>
+
+                        <p:column headerText="TOTAL EN USD">
+                            <h:outputText value="#{c.importeTotalUsd}"/>
+                        </p:column>
+
+                        <p:column headerText="PAGAR A">
+                            <h:outputText value="#{c.pagarA}"/>
+                        </p:column>
+
+                        <p:column headerText="GASTOS A MARUBENI MX">
+                            <h:outputText value="#{c.gastosA}"/>
+                        </p:column>
+
+                        <p:column headerText="CARGO DE MARUBENI JPN">
+                            <h:outputText value="#{c.cargoDe}"/>
+                        </p:column>
+
+                        <p:column headerText="SECCIÓN AUTORIZA">
+                            <h:outputText value="#{c.seccionAutoriza}"/>
+                        </p:column>
+
+                        <p:column headerText="DEPARTAMENTO">
+                            <h:outputText value="#{c.usuario.departamento}"/>
+                        </p:column>
+
+                        <p:column headerText="BANCO">
+                            <h:outputText value="#{c.subcuenta.banco}"/>
+                        </p:column>
+
+                        <p:column headerText="CUENTA">
+                            <h:outputText id="cta" value="#{c.cuentaBeneficiario}"/>
+                        </p:column>
+
+                        <p:column headerText="AUTORIZACIÓN">
+                            <h:outputText value="#{c.subcuenta.subcuenta}"/>
+                        </p:column>
+
+                        <p:column headerText="XML">
+                            <h:outputText value="#{c.xml}"/>
+                        </p:column>
+
+                        <p:column headerText="EDITAR CTA" exportable="false">
+                            <p:commandButton icon="pi pi-pencil" 
+                                             update="frmPrincipal:dlgCta"
+                                             oncomplete="PF('wvCta').show()"
+                                             >
+                                <f:setPropertyActionListener value="#{c}"
+                                                             target="#{captura.cap}" />
+                            </p:commandButton>
+                        </p:column>
+                        <p:column headerText="IMPRIMIR" exportable="false">
+                            <h:commandLink id="reporte" 
+                                           value="" 
+                                           target="_blank" 
+                                           actionListener="#{captura.imprimirReporte(c.folio, c.tipoSolicitud)}">
+                                <h:graphicImage url="../resources/img/printer.png" styleClass="azul" style="height: 40px; width: 40px"/> 
+                            </h:commandLink>     
+                        </p:column>
+                        <p:column headerText="DESCARGAR POLIZA" exportable="false">
+                            <h:commandLink id="PO" 
+                                           value="" 
+                                           rendered="#{c.estadoPoliza=='GENERADA'}"
+                                           target="_blank" 
+                                           actionListener="#{poliza.reportePolizaBean(c.usuario.subcuenta, c.folio)}">
+                                <h:graphicImage url="../resources/img/descarga.png" styleClass="azul" style="height: 40px; width: 40px"/> 
+                            </h:commandLink>     
+                        </p:column>
+                        <p:column headerText="GENERAR POLIZA" exportable="false">
+                            <p:commandButton icon="pi pi-cog" 
+                                             rendered="#{c.estadoPoliza==null}"
+                                             update="frmPrincipal:tblCaptura, frmPrincipal:msgs" 
+                                             actionListener="#{poliza.captura(c.usuario.idusuario, c.folio, c.conceptoGasto, c.xml)}"/>
+                        </p:column>
+
+                    </p:dataTable>
+
+                    <p:dialog id="dlgCta" widgetVar="wvCta" showEffect="explode" hideEffect="bounce">
+                        <h:panelGrid columns="1" cellpadding="10">
+                            <h:outputLabel/>
+                            <h:outputText value="#{captura.cap.idgasto}" style="color: #ffffff" />
+                            <p:badge severity="danger" value="CUENTA ANTERIOR"/>
+                            <h:outputText value="#{captura.cap.cuentaBeneficiario}" />
+                            <p:badge severity="success" value="NUEVA CUENTA"/>
+                            <p:selectOneMenu id="nuevaC" value="#{captura.nuevaCuenta}">
+                                <f:selectItems value="#{captura.listaCuenta}" />
+                            </p:selectOneMenu>
+                            <p:commandButton value="Actualizar" update="frmPrincipal:tblCaptura, frmPrincipal:msgs " 
+                                             oncomplete="PF('wvCta').hide()" 
+                                             actionListener="#{captura.preparaCuenta(captura.nuevaCuenta, captura.cap.idgasto)}"/>
+                        </h:panelGrid>
+                       
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

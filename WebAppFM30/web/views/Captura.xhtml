@@ -1,0 +1,680 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <script src="../resources/js/validar.js" type="text/javascript"></script>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/Template.xhtml">
+
+            <ui:define name="content">
+
+                <!--Formulario principal-->
+
+                <h:form id="frmPrincipal">
+                    <p:growl id="msgs" showDetail="true"
+                             skipDetailIfEqualsSummary="true" />
+
+                    <div style="text-align: center">
+                        <p:badge value="MÓDULO DE CAPTURA REPORTE FM30"  styleClass="rojo etiqueta" />
+                    </div>
+                    <p:commandButton value="INICIAR CAPTURA" 
+                                     icon="pi pi-cog" 
+                                     oncomplete="PF('dialogPInicial').show()" 
+                                     update="frmPInicial"
+                                     styleClass="etiqueta"
+                                     />
+                    <p:outputLabel
+                        value="#{captura.captura.idgasto}"
+                        style="color: #EAECEE" />
+                    <p:divider/>
+
+
+                    <div style="text-align: center">
+                        <p:badge value="REPORTES CAPTURADOS" styleClass="etiqueta" />
+                    </div>
+<script>
+    PrimeFaces.locales['es'] = {
+        closeText: 'Cerrar',
+        prevText: 'Anterior',
+        nextText: 'Siguiente',
+        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+        dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
+        weekHeader: 'Semana',
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: '',
+        timeOnlyTitle: 'Sólo hora',
+        timeText: 'Tiempo',
+        hourText: 'Hora',
+        minuteText: 'Minuto',
+        secondText: 'Segundo',
+        millisecondText: 'Milisegundo',
+        currentText: 'Fecha actual',
+        ampm: false,
+        month: 'Mes',
+        week: 'Semana',
+        day: 'Día',
+        allDayText: 'Todo el día',
+        today: 'Hoy',
+        clear: 'Claro'
+    };
+</script>
+
+<script>
+    //<![CDATA[
+    function dateTemplateFunc(date) {
+        return '<span style="background-color:' + ((date.day < 21 && date.day > 10) ? '#81C784' : 'inherit') + ';border-radius:50%;width: 2.5rem;height: 2.5rem;line-height: 2.5rem;display: flex;align-items: center;justify-content: center;">' + date.day + '</span>';
+    }
+
+    //]]>
+</script>
+                    <p:dataTable id="tblCaptura" styleClass="tabla" reflow="true"
+                                 paginator="true"
+                                 scrollable="true" 
+                                 scrollHeight="250"
+                                 paginatorPosition="top"
+                                 var="c" 
+                                 value="#{captura.listaCaptura}" 
+                                 emptyMessage="NO HAY REGISTROS AGREGADOS">
+                        
+                        <p:column headerText="TIPO SOLICITUD">
+                            <h:outputText value="#{c.tipoSolicitud}"/>
+                        </p:column>
+
+                        <p:column headerText="FECHA PAGO">
+                            <h:outputText value="#{c.fecha}"/>
+                        </p:column>
+
+                        <p:column headerText="CONCEPTO DEL GASTO">
+                            <h:outputText value="#{c.conceptoGasto}"/>
+                        </p:column>
+
+                        <p:column headerText="TOTAL">
+                            <h:outputText value="#{c.importeTotalMx}"/>
+                        </p:column>
+
+                        <p:column headerText="TIPO DE MONEDA">
+                            <h:outputText value="#{c.currency}"/>
+                        </p:column>
+
+                        <p:column headerText="PAGAR A">
+                            <h:outputText value="#{c.pagarA}"/>
+                        </p:column>
+
+                        <p:column headerText="GASTOS A MARUBENI MX">
+                            <h:outputText value="#{c.gastosA}"/>
+                        </p:column>
+
+                        <p:column headerText="CARGO DE MARUBENI JPN">
+                            <h:outputText value="#{c.cargoDe}"/>
+                        </p:column>
+
+                        <p:column headerText="SECCIÓN AUTORIZA">
+                            <h:outputText value="#{c.seccionAutoriza}"/>
+                        </p:column>
+
+                        <p:column headerText="DEPARTAMENTO">
+                            <h:outputText value="#{c.usuario.departamento}"/>
+                        </p:column>
+
+                        <p:column headerText="BANCO">
+                            <h:outputText value="#{c.subcuenta.banco}"/>
+                        </p:column>
+
+                        <p:column headerText="CUENTA">
+                            <h:outputText value="#{c.subcuenta.cuenta}"/>
+                        </p:column>
+
+                        <p:column headerText="AUTORIZACIÓN">
+                            <h:outputText value="#{c.subcuenta.subcuenta}"/>
+                        </p:column>
+
+
+                        <p:column headerText="IMPRIMIR" width="25px">
+                            <h:commandLink id="reporte" 
+                                           value="" 
+                                           target="_blank" 
+                                           actionListener="#{captura.imprimirReporte(c.folio, c.tipoSolicitud)}">
+                                <h:graphicImage url="../resources/img/printer.png" styleClass="azul" style="height: 30px; width: 30px"/> 
+                            </h:commandLink>     
+                        </p:column>
+                        <p:column headerText="ENVIAR" width="25px">
+                            <p:commandButton icon="pi pi-send" 
+                                             update="frmPrincipal:tblCaptura, frmPrincipal:msgs" 
+                                             style="height: 30px; width: 30px"
+                                             actionListener="#{captura.procesar(c.folio, c.fecha, c.pagarA ,c.tipoSolicitud, c.conceptoGasto, c.importeTotalMx, c.currency)}"
+                                             styleClass="verde"/>
+                        </p:column>
+                        <p:column headerText="BORRAR" width="25px">
+                            <p:commandButton icon="pi pi-trash" 
+                                             style="height: 30px; width: 30px"
+                                             update="frmPrincipal:tblCaptura, frmPrincipal:msgs" 
+                                             actionListener="#{captura.borrar(c)}" 
+                                             styleClass="rojo"/>
+                        </p:column>  
+
+
+                    </p:dataTable>
+
+
+
+
+                </h:form>
+
+                <h:form>
+                    <p:dialog id="dlgXML" 
+                              header="CARGA DE ARCHIVOS"
+                              styleClass="etiqueta"
+                              widgetVar="dlgSubirXML" 
+                              showEffect="explode" 
+                              hideEffect="explode" 
+                              closable="false"
+                              height="300" 
+                              width="900">
+                        <div style="text-align: center">
+                            <p:badge value="ARRASTRA Y SUELTA TUS ARCHIVOS XML EN LA ZONA SOMBREADA" styleClass="etiqueta"/> 
+                        </div>
+                        <br></br>
+                        <p:fileUpload skinSimple="true" 
+                                      label="CARGAR XML" 
+                                      styleClass="etiqueta verde"
+                                      cancelLabel="CANCELAR" 
+                                      uploadLabel="PROCESAR" 
+                                      sequential="true"
+                                      listener="#{fileUploadView.handleFileUpload}" 
+                                      mode="advanced"
+                                      dragDropSupport="true" 
+                                      multiple="true" 
+                                      update="messages"
+                                      sizeLimit="9000000" 
+                                      fileLimit="100"
+                                      allowTypes="/(\.|\/)(XML|xml)$/" />
+                        <p:growl id="messages" showDetail="true" keepAlive="true" />
+                        <br></br>
+                        <p:spacer width="810"/>
+                        <p:commandButton icon="pi pi-times" update="frmConXML:tblFactura,frmConXML:beneficiario,frmConXML:bBen,frmConXML:seccion, frmConXML:cBen, frmConXML:aBen, frmConXML:fec" actionListener="#{captura.listarFacturaXML()}"  oncomplete="PF('dlgSubirXML').hide()"/>
+                    </p:dialog>
+                </h:form>
+                <h:form>
+                    <p:dialog id="dlgArchivos" 
+                              header="CARGA DE ARCHIVOS"
+                              styleClass="etiqueta"
+                              widgetVar="dlgSubirArchivos" 
+                              showEffect="explode" 
+                              hideEffect="explode" 
+                              closable="false"
+                              height="300" 
+                              width="900">
+                        <div style="text-align: center">
+                            <p:badge value="ARRASTRA Y SUELTA TUS ARCHIVOS EN LA ZONA SOMBREADA" styleClass="etiqueta"/> 
+                        </div>
+                        <br></br>
+                        <p:fileUpload skinSimple="true" label="CARGAR ARCHIVO" styleClass="etiqueta verde"
+                                      cancelLabel="CANCELAR" uploadLabel="PROCESAR" sequential="true"
+                                      listener="#{fileUploadView.handleFileUploadOtros}" mode="advanced"
+                                      dragDropSupport="true" multiple="true" update="messages"
+                                      sizeLimit="9000000" fileLimit="100"
+                                      allowTypes="/(\.|\/)(PDF|pdf|JPG|jpg|PNG|png)$/" />
+                        <p:growl id="messages" showDetail="true" keepAlive="true" />
+                        <br></br>
+                        <p:spacer width="810"/>
+                        <p:commandButton icon="pi pi-times"  oncomplete="PF('dlgSubirArchivos').hide()"/>
+                    </p:dialog>
+                </h:form>
+                <!--FORMULARIO PARA SELECCIONAR TIPO DE GASTOS-->
+                <h:form id="frmDec">
+                    <p:growl id="msgfrmDec" showSummary="true" showDetail="true"/>
+                    <p:dialog id="dlgDec" 
+                              widgetVar="dlgDecision" 
+                              showEffect="puff" 
+                              hideEffect="scale" 
+                              height="300" 
+                              width="450">
+                        <div style="text-align: center">
+                            <p:badge id="bPregunta" value="#{captura.pregunta.tipoPregunta}" styleClass="etiqueta verde"/>      
+
+                            <br></br>
+                            <br></br>
+                            <p:panel id="pnlPregunta">
+                                <!--UNO-->
+                                <p:selectOneMenu id="opSiNo" 
+                                                 styleClass="combo" 
+                                                 style="width: 300px;"
+                                                 value="#{captura.pregunta.xmlSiNo}"  
+                                                 required="true"
+                                                 requiredMessage="Selecciona una opción"
+                                                 rendered="#{captura.pregunta.tipoPregunta=='¿Tienes XML?'}">
+                                    <f:selectItem itemLabel="Selecciona" itemValue=""/>
+                                    <f:selectItem itemLabel="SI" itemValue="SI"/>
+                                    <f:selectItem itemLabel="NO" itemValue="NO"/>
+                                </p:selectOneMenu>
+                                <p:spacer height="30" width="220" rendered="#{captura.pregunta.tipoPregunta=='¿Tienes XML?'}"/>
+                                <p:commandButton id="bt1Si" value="Siguiente" 
+                                                 icon="pi pi-angle-double-right" 
+                                                 update="frmDec:bPregunta, frmDec:pnlPregunta, frmDec:msgfrmDec" 
+                                                 styleClass="etiqueta jungleGreen"
+                                                 rendered="#{captura.pregunta.tipoPregunta=='¿Tienes XML?'}"
+                                                 actionListener="#{captura.tipoDeMoneda()}" />
+                                <!--DOS-->
+
+                                <p:selectOneMenu id="opTipoMoneda" 
+                                                 styleClass="combo" 
+                                                 style="width: 300px"
+                                                 value="#{captura.pregunta.tipoMoneda}" 
+                                                 required="true"
+                                                 requiredMessage="Selecciona una opción"
+                                                 rendered="#{captura.pregunta.tipoPregunta=='¿Cuál es el tipo de moneda?'}">
+                                    <f:selectItem itemLabel="Selecciona" itemValue=""/>
+                                    <f:selectItem itemLabel="MONEDA NACIONAL" itemValue="MONEDA NACIONAL"/>
+                                    <f:selectItem itemLabel="DÓLARES" itemValue="DÓLARES"/>
+                                </p:selectOneMenu>
+                                <p:spacer height="30" width="220" rendered="#{captura.pregunta.tipoPregunta=='¿Cuál es el tipo de moneda?'}"/>
+                                <p:commandButton id="btn2Si" value="Siguiente" 
+                                                 icon="pi pi-angle-double-right" 
+                                                 update="frmDec:bPregunta, frmDec:pnlPregunta, frmDec:msgfrmDec" 
+                                                 styleClass="etiqueta jungleGreen"
+                                                 rendered="#{captura.pregunta.tipoPregunta=='¿Cuál es el tipo de moneda?'}"
+                                                 actionListener="#{captura.tipoSolicitud()}" />
+
+                                <!--TRES-->  
+                                <p:selectOneMenu id="option" 
+                                                 styleClass="combo" 
+                                                 style="width: 300px"
+                                                 required="true"
+                                                 requiredMessage="Selecciona una opción"
+                                                 value="#{captura.captura.tipoSolicitud}"  
+                                                 rendered="#{captura.pregunta.tipoPregunta=='Selecciona el tipo de solicitud a capturar'}">
+                                    <f:selectItem itemLabel="Selecciona" itemValue=""/>
+                                    <f:selectItem itemLabel="Pago de gastos" itemValue="PAGO DE GASTOS"/>
+                                    <f:selectItem itemLabel="Transferencia" itemValue="TRANSFERENCIA"/>
+                                    <f:selectItem itemLabel="Cargo a M/A" itemValue="CARGO A M/A"/>
+                                    <f:selectItem itemLabel="Reembolso de gastos" itemValue="REEMBOLSO DE GASTOS"/>
+                                    <f:selectItem itemLabel="Cheque" itemValue="CHEQUE"/>
+                                </p:selectOneMenu>
+                                <br></br>
+                                <br></br>
+                                <p:spacer width="200" rendered="#{captura.pregunta.tipoPregunta=='Selecciona el tipo de solicitud a capturar'}"/>
+                                <p:commandButton id="btn3Ir" value="Siguientes"
+                                                 icon="pi pi-angle-double-right" 
+                                                 update="frmDec:bPregunta, frmDec:pnlPregunta, frmConXML:dialogConXML, frmDec:msgfrmDec"
+                                                 styleClass="etiqueta jungleGreen"
+                                                 rendered="#{captura.pregunta.tipoPregunta=='Selecciona el tipo de solicitud a capturar' and captura.pregunta.xmlSiNo=='SI'}"
+                                                 actionListener="#{captura.actualizarSiguiente()}"
+                                                 />
+                                <p:commandButton id="btn3Ir2" value="Siguientexxx"
+                                                 icon="pi pi-angle-double-right" 
+                                                 update="frmDec:bPregunta, frmDec:pnlPregunta, frmConXML:dialogConXML, frmDec:msgfrmDec"
+                                                 styleClass="etiqueta jungleGreen"
+                                                 rendered="#{captura.pregunta.tipoPregunta=='Selecciona el tipo de solicitud a capturar' and captura.pregunta.xmlSiNo=='NO'}"
+                                                 oncomplete="PF('dlgConXML').show(), PF('dlgDecision').hide()"
+                                                 />
+                                <!--CUATRO-->  
+                                <p:selectOneMenu id="option2" 
+                                                 styleClass="etiqueta" 
+                                                 style="width: 300px"
+                                                 value="#{captura.captura.portal}"  
+                                                 rendered="#{captura.pregunta.tipoPregunta=='Desde el portal de gastos'}">
+                                    <f:selectItem itemLabel="Selecciona" itemValue="Selecciona"/>
+                                    <f:selectItem itemLabel="SI" itemValue="SI"/>
+                                    <f:selectItem itemLabel="NO" itemValue="NO"/>
+
+                                </p:selectOneMenu>
+                                <br></br>
+                                <br></br>
+                                <p:spacer width="280" rendered="#{captura.pregunta.tipoPregunta=='Desde el portal de gastos'}"/>
+                                <p:commandButton id="btn4Ir"
+                                                 value="Siguiente"
+                                                 icon="pi pi-angle-double-right" 
+                                                 update="frmDec:bPregunta, frmDec:pnlPregunta, frmConXML:dialogConXML"  
+                                                 styleClass="etiqueta jungleGreen"
+                                                 rendered="#{captura.pregunta.tipoPregunta=='Desde el portal de gastos'}"
+                                                 oncomplete="PF('dlgConXML').show(), PF('dlgDecision').hide()"
+                                                 />
+
+                            </p:panel>
+                        </div>
+
+                    </p:dialog>
+                </h:form>
+                <!--CAPTURA DE GASTOS MN CON XML-->
+                <h:form id="frmConXML">
+
+                    <p:dialog id="dlg" 
+                              widgetVar="dlgGastos" 
+                              showEffect="explode" 
+                              hideEffect="explode" 
+                              height="300" 
+                              width="900">
+
+                        <p:commandButton icon="pi pi-search" 
+                                         actionListener="#{captura.listarConceptoGastos()}" 
+                                         styleClass="etiqueta"  
+                                         update="frmConXML:tblGastos"/>
+                        <p:dataTable id="tblGastos" 
+                                     style="height: 250px;"
+                                     styleClass="tabla"
+                                     paginator="true"
+                                     paginatorPosition="top"
+                                     var="g" 
+                                     scrollHeight="200"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="10,20,50,100,200,500" reflow="true"
+                                     onRowClick="" rowHover="true" resizeMode="fit"
+                                     value="#{captura.listaConceptoGastos}" 
+                                     emptyMessage="NO HAY REGISTROS AGREGADOS">
+                            <p:column headerText="ID">
+                                <h:outputText value="#{g.idConcepto}"/>
+                            </p:column>
+                            <p:column headerText="CONCEPTO">
+                                <h:outputText value="#{g.nombreConcepto}"/>
+                            </p:column>
+                            <p:column headerText="RFC">
+                                <h:outputText value="#{g.rfc}"/>
+                            </p:column>
+                            <p:column headerText="NOMBRE">
+                                <h:outputText value="#{g.nombre}"/>
+                            </p:column>
+                            <p:column headerText="FACTURA">
+                                <h:outputText value="#{g.factura}"/>
+                            </p:column>
+                            <p:column headerText="UUID">
+                                <h:outputText value="#{g.uuid}"/>
+                            </p:column>
+                            <p:column headerText="TOTAL">
+                                <h:outputText value="#{g.totalmxn}"/>
+                            </p:column>
+                            <p:column headerText="IMPORTE">
+                                <h:outputText value="#{g.importe}"/>
+                            </p:column>
+                            <p:column headerText="IVA">
+                                <h:outputText value="#{g.iva}"/>
+                            </p:column>
+                            <p:column headerText="ISH">
+                                <h:outputText value="#{g.ish}"/>
+                            </p:column>
+                            <p:column headerText="PROPINA">
+                                <h:outputText value="#{g.propina}"/>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton icon="pi pi-plus" 
+                                                 styleClass="etiqueta"
+                                                 actionListener="#{captura.agregarPartida(g.idConcepto)}" 
+                                                 update="frmConXML:tblFactura2"
+                                                 >
+                                </p:commandButton>  
+                            </p:column>
+
+                        </p:dataTable>
+
+                    </p:dialog>
+
+                    <p:dialog id="dialogConXML" 
+                              showEffect="puff"
+                              hideEffect="puff"
+                              height="600" header="SISTEMA DE SOLICITUD DE GASTOS FM30" 
+                              styleClass="etiqueta"
+                              widgetVar="dlgConXML">
+                        <p:badge value="CAPTURA DE GASTOS >> XML > #{captura.pregunta.xmlSiNo} >> TIPO DE MONEDA > #{captura.pregunta.tipoMoneda} >> TIPO DE SOLICITUD > #{captura.captura.tipoSolicitud}" />
+                        <div class="card">
+                            <div style="text-align: center">
+                                <p:divider/>
+                                <div style="text-align: center; background: #f8f9fa">
+
+                                    <p:commandButton icon="pi pi-file"
+                                                     value="Buscar archivo"
+                                                     styleClass="etiqueta"
+                                                     rendered="#{captura.pregunta.xmlSiNo=='NO'}"
+                                                     update="frmPrincipal" 
+                                                     oncomplete="PF('dlgSubirArchivos').show()"/>
+                                    <p:spacer width="10"/>
+                                    <p:commandButton icon="pi pi-file"
+                                                     value="Buscar XML"
+                                                     styleClass="etiqueta"
+                                                     rendered="#{captura.pregunta.xmlSiNo=='SI'}"
+                                                     update="frmPrincipal" 
+                                                     oncomplete="PF('dlgSubirXML').show()"/>
+                                    <p:spacer width="10"/>
+                                    <p:commandButton icon="pi pi-cloud-download"
+                                                     styleClass="etiqueta"
+                                                     value="Importar desde el portal"
+                                                     rendered="#{captura.captura.portal=='SI'}"
+                                                     oncomplete="PF('dlgGastos').show()"/>
+                                    <p:spacer width="10"/>
+                                    <p:commandButton icon="pi pi-save" 
+                                                     styleClass="etiqueta"
+                                                     value="Guardar captura"
+                                                     actionListener="#{captura.guardarPago()}"
+                                                     update="frmPrincipal, frmConXML"/>
+                                </div>
+                                <p:divider/>
+                            </div>
+                            <h:panelGrid>
+                                <h:panelGrid id="pnlxmlmn" bgcolor="#f8f9fa"   columns="4" cellpadding="2" style="font-size: 10px !important">
+
+                                    <p:outputLabel value="BENEFICIARIO" for="@next" styleClass="etiqueta"/>
+                                    <p:autoComplete id="beneficiario" dropdown="true" value="#{captura.subcuenta.companyName}"
+                                                    completeMethod="#{captura.completeBeneficiario}" scrollHeight="250" styleClass="captura"
+                                                    inputStyle="width: 300px !important; font-size: 12px !important, background-color: #f9ebea !important;color: #154360 !important; font-family: 'Poppins', sans-serif !important;" placeholder="Ingresa el beneficiario">
+                                        <p:ajax update="frmConXML:bBen, frmConXML:cBen, frmConXML:aBen" event="change" listener="#{captura.llenarCamposFaltantes(captura.subcuenta.companyName)}" />
+                                    </p:autoComplete>
+
+                                    <p:outputLabel value="BANCO"
+                                                   rendered="#{captura.captura.tipoSolicitud=='TRANSFERENCIA'}"
+                                                   styleClass="etiqueta" />
+                                    <p:inputText id="bBen" 
+                                                 rendered="#{captura.captura.tipoSolicitud=='TRANSFERENCIA'}"
+                                                 style="width: 300px" 
+                                                 styleClass="captura"
+                                                 value="#{captura.captura.bancoBeneficiario}" 
+                                                 required="false" 
+                                                 placeholder="Ingresa banco"
+                                                 requiredMessage="Campo requerido" />
+
+                                    <p:outputLabel value="CUENTA CLABE" 
+                                                   rendered="#{captura.captura.tipoSolicitud=='TRANSFERENCIA'}"
+                                                   styleClass="etiqueta" />
+                                    <p:inputText id="cBen"
+                                                 rendered="#{captura.captura.tipoSolicitud=='TRANSFERENCIA'}"
+                                                 style="width: 300px" 
+                                                 styleClass="captura"
+                                                 value="#{captura.captura.cuentaBeneficiario}" 
+                                                 required="false" 
+                                                 placeholder="Ingresa cuenta CLABE"
+                                                 requiredMessage="Campo requerido" />
+
+                                    <p:outputLabel value="REFERENCIA BANCARIA" 
+                                                   rendered="#{captura.captura.tipoSolicitud=='TRANSFERENCIA'}"
+                                                   styleClass="etiqueta" />
+                                    <p:inputText id="aBen" 
+                                                 rendered="#{captura.captura.tipoSolicitud=='TRANSFERENCIA'}"
+                                                 style="width: 300px" 
+                                                 styleClass="captura"
+                                                 value="#{captura.captura.autorizacionBeneficiario}" 
+                                                 required="false" 
+                                                 placeholder="Ingresa referencia"
+                                                 requiredMessage="Campo requerido" />
+
+                                    <p:outputLabel value="GASTOS A MARUBENI MÉXICO S.A. DE C.V." styleClass="etiqueta" />
+                                    <p:inputText id="gastos" style="width: 200px;" styleClass="captura"
+                                                 value="#{captura.captura.gastosA}" required="false" placeholder="Ingresa porcentaje si aplica"
+                                                 requiredMessage="Campo requerido"/>
+
+                                    <p:outputLabel value="CARGO A MARUBENI CORP. JAPÓN" styleClass="etiqueta" />
+                                    <p:inputText id="cargo" style="width: 300px;" styleClass="captura"
+                                                 value="#{captura.captura.cargoDe}" required="false" placeholder="Ingresa porcentaje si aplica"
+                                                 requiredMessage="Campo requerido" />
+
+                                    <p:outputLabel value="SECCIÓN AUTORIZADA" styleClass="etiqueta" />
+                                    <p:inputText id="seccion" style="width: 300px" 
+                                                 value="#{captura.captura.seccionAutoriza}" required="false" placeholder="Ingresa sección autorizada"
+                                                 requiredMessage="Campo requerido" styleClass="captura" />
+
+                                    <p:outputLabel value="FECHA DE PAGO DEL SISTEMA" styleClass="etiqueta" />
+                                    <p:calendar id="fec" readonly="true" 
+                                                pattern="dd-MMMM-YYYY"
+                                                placeholder="Fecha de pago del sistema" 
+                                                inputStyle="width: 300px !important; font-size: 12px !important, font-family: 'Poppins', sans-serif !important;" 
+                                                value="#{captura.captura.fecha}" style="font-family: 'Poppins', sans-serif !important;" styleClass="captura"/>
+
+                                    <p:outputLabel value="CONCEPTO DEL GASTO" styleClass="etiqueta" />
+                                    <p:inputTextarea id="concepto" style="width: 300px;" styleClass="captura"
+                                                     value="#{captura.captura.conceptoGasto}" required="false" placeholder="Ingresa el concepto"
+                                                     requiredMessage="Campo requerido" />
+
+                                    <p:outputLabel value="OBSERVACIONES" styleClass="etiqueta" />
+                                    <p:inputTextarea id="obs" style="width: 300px;" styleClass="captura"
+                                                     value="#{captura.captura.observaciones}" required="false" placeholder="Ingresa las observaciones"
+                                                     requiredMessage="Campo requerido" />
+
+                                    <p:outputLabel value="IMPORTE TOTAL DLLS"
+                                                   rendered="#{captura.pregunta.xmlSiNo=='NO' and captura.pregunta.tipoMoneda=='DÓLARES'}"
+                                                   styleClass="etiqueta" />
+                                    <p:inputText id="importusd" disabled="false"
+                                                 rendered="#{captura.pregunta.xmlSiNo=='NO' and captura.pregunta.tipoMoneda=='DÓLARES'}"
+                                                 value="#{captura.captura.importeTotalUsd}" required="false" placeholder="Ingresa importe"
+                                                 requiredMessage="Campo requerido" styleClass="captura"/>
+
+                                    <p:outputLabel value="IMPORTE TOTAL M.N."
+                                                   rendered="#{captura.pregunta.xmlSiNo=='NO' and captura.pregunta.tipoMoneda=='MONEDA NACIONAL'}"
+                                                   styleClass="etiqueta" />
+                                    <p:inputNumber id="importmxn" 
+                                                   rendered="#{captura.pregunta.xmlSiNo=='NO' and captura.pregunta.tipoMoneda=='MONEDA NACIONAL'}"
+                                                   disabled="false" value="#{captura.captura.importeTotalMx}" style="font-size: 9px !important" minValue="-1000.999"
+                                                   decimalPlaces="2" placeholder="Ingresa importe" requiredMessage="Campo requerido" styleClass="captura" />
+                                </h:panelGrid>
+                            </h:panelGrid>
+
+                            <div style="text-align: center">
+                                <p:badge value="LISTA DE XML" 
+                                         rendered="#{captura.pregunta.xmlSiNo=='SI' or captura.captura.portal=='SI'}"
+                                         styleClass="verde etiqueta" />
+                            </div>
+                            <p:dataTable id="tblFactura" 
+                                         rendered="#{captura.pregunta.xmlSiNo=='SI'}"
+                                         styleClass="etiqueta"
+                                         style="height: 200px; font-size: 10px"
+                                         scrollHeight="50"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="10,20,50,100,200,500" reflow="true"
+                                         paginator="true"
+                                         paginatorPosition="top"
+                                         var="g" 
+                                         value="#{captura.listaFactura}" 
+                                         emptyMessage="No hay registros de gastos">
+                                <p:column headerText="FACTURA">
+                                    <h:outputText value="#{g.factura}"/>
+                                </p:column>
+                                <p:column headerText="UUID">
+                                    <h:outputText value="#{g.uuid}"/>
+                                </p:column>
+                                <p:column headerText="IMPORTE">
+                                    <h:outputText value="#{g.importe}"/>
+                                </p:column>
+                                <p:column headerText="TOTAL">
+                                    <h:outputText value="#{g.totalmxn}"/>
+                                </p:column>
+                                <!--                                <p:column headerText="QUITAR FACTURA">
+                                                                    <p:commandLink value="X" style="text-decoration: none"
+                                                                                   actionListener="{captura.quitarFactura(g.factura, g.totalmxn)}"
+                                                                                   update="frmConXML:tblFactura, frmPrincipal:msgs, frmConXML:importmxn"/>
+                                                                </p:column>-->
+                                <p:columnGroup type="footer">
+                                    <p:row>
+                                        <p:column colspan="3" style="text-align:right" footerText="GRAN TOTAL:"/>
+                                        <p:column>
+                                            <f:facet name="footer">
+                                                <h:outputText id="granTotal" value="#{captura.granTotal}">
+                                                    <f:convertNumber type="currency" currencySymbol="$"/>
+                                                </h:outputText>
+                                            </f:facet>
+                                        </p:column>
+                                    </p:row>
+                                </p:columnGroup>
+                            </p:dataTable>
+                            <p:dataTable id="tblFactura2" 
+                                         rendered="#{captura.captura.portal=='SI'}"
+                                         styleClass="etiqueta"
+                                         style="height: 200px; font-size: 10px"
+                                         scrollHeight="50"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="10,20,50,100,200,500" reflow="true"
+                                         paginator="true"
+                                         paginatorPosition="top"
+                                         var="g" 
+                                         value="#{captura.listaFactura2}" 
+                                         emptyMessage="No hay registros de gastos">
+                                <p:column headerText="FACTURA">
+                                    <h:outputText value="#{g.factura}"/>
+                                </p:column>
+                                <p:column headerText="UUID">
+                                    <h:outputText value="#{g.uuid}"/>
+                                </p:column>
+                                <p:column headerText="IMPORTE">
+                                    <h:outputText value="#{g.importe}"/>
+                                </p:column>
+                                <p:column headerText="TOTAL">
+                                    <h:outputText value="#{g.totalmxn}"/>
+                                </p:column>
+                                <p:column headerText="QUITAR FACTURA">
+                                    <p:commandLink value="X" style="text-decoration: none"
+                                                   actionListener="#{captura.quitarFactura(g.factura, g.totalmxn)}"
+                                                   update="frmConXML:tblFactura2, frmPrincipal:msgs"/>
+                                </p:column>
+                                <p:columnGroup type="footer">
+                                    <p:row>
+                                        <p:column colspan="3" style="text-align:right" footerText="GRAN TOTAL:"/>
+                                        <p:column>
+                                            <f:facet name="footer">
+                                                <h:outputText id="granTotal" value="#{captura.granTotal2}">
+                                                    <f:convertNumber type="currency" currencySymbol="$"/>
+                                                </h:outputText>
+                                            </f:facet>
+                                        </p:column>
+                                    </p:row>
+                                </p:columnGroup>
+                            </p:dataTable>
+                        </div>    
+                    </p:dialog>
+                </h:form>
+                <h:form id="frmPInicial">
+                    <p:growl id="pmsg" showSummary="true" showDetail="true"/>
+                    <p:dialog id="dlgPIni" widgetVar="dialogPInicial">
+                        <div style="text-align: center">
+                            <p:badge value="¿NACIONAL O EXTRANJERO?"  styleClass="rojo etiqueta" />
+                            <br></br>
+                            <br></br>
+                        </div>
+                        <p:selectOneMenu id="naex" 
+                                         styleClass="combo" 
+                                         style="width: 300px;"
+                                         required="true"
+                                         requiredMessage="Selecciona tipo de viaje"
+                                         value="#{captura.pregunta.xmlSiNo}">       
+                            <f:selectItem itemLabel="Selecciona" itemValue=""/>
+                            <f:selectItem itemLabel="NACIONAL" itemValue="NACIONAL"/>
+                            <f:selectItem itemLabel="EXTRANJERO" itemValue="EXTRANJERO"/>
+                        </p:selectOneMenu>
+                        <br></br>
+                        <br></br>
+                        <p:commandButton value="SIGUIENTE" 
+                                         icon="pi pi-angle-double-right" 
+                                         update="frmPInicial:pmsg, frmPInicial:naex"
+                                         styleClass="etiqueta"
+                                         actionListener="#{captura.tienesXML()}"
+                                         />
+                    </p:dialog>
+                </h:form>
+
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

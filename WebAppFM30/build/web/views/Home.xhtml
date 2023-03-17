@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <script src="../resources/js/validar.js" type="text/javascript"></script>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/Template.xhtml">
+
+            <ui:define name="content">
+
+                <!--Formulario principal-->
+
+                <h:form id="frmPrincipal">
+                    <p:growl id="msgs" showDetail="true"
+                             skipDetailIfEqualsSummary="true" />
+
+                    <div style="text-align: center">
+                        <p:badge value="SISTEMA DE REPORTES FM30"  styleClass="rojo etiqueta" />
+                    </div>
+                    
+                    <p:outputLabel
+                        value="#{captura.captura.idgasto}"
+                        style="color: #EAECEE" />
+                    <p:divider/>
+
+
+                    <div style="text-align: center">
+                        <p:badge value="MARUBENI MÉXICO" styleClass="etiqueta" />
+                    </div>
+
+  
+
+
+
+                </h:form>
+
+        
+
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

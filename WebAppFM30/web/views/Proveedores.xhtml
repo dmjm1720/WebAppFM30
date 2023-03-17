@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>SUBCUENTA</h:head>
+    <body>
+        <ui:composition template="/template/Template.xhtml">
+
+            <ui:define name="content">
+
+                <h:form id="frmPrincipal">
+                    <p:growl id="msgs" showDetail="true"
+                             skipDetailIfEqualsSummary="true" />
+
+                    <div class="card">
+                        <p:fieldset legend="Subcuenta | Agregar / Editar " toggleable="true" toggleSpeed="500" style="background-color: #EAECEE; color: #154360;">
+                            <h:panelGrid  columns="12" cellpadding="4">
+                                <p:outputLabel
+                                    value="#{subcuenta.subcuenta.idsubcuenta}"
+                                    style="color: #EAECEE" />
+
+                                <p:outputLabel for="co" value="CO" />
+                                <p:inputText id="co"
+                                             value="#{subcuenta.subcuenta.co}" required="false"
+                                             requiredMessage="Campo requerido" />
+                                <p:message for="co" />
+
+                                <p:outputLabel for="cn" value="COMPANY NAME" />
+                                <p:inputText id="cn" 
+                                             value="#{subcuenta.subcuenta.companyName}" required="false"
+                                             requiredMessage="Campo requerido" >
+                                </p:inputText>
+                                <p:message for="cn" />
+
+                                <p:outputLabel for="ctr" value="CTR" />
+                                <p:inputText id="ctr"
+                                             value="#{subcuenta.subcuenta.ctr}" required="false"
+                                             requiredMessage="Campo requerido" />
+                                <p:message for="ctr" />
+
+                                <p:outputLabel for="cta" value="CUENTA" />
+                                <p:inputText id="cta"
+                                             value="#{subcuenta.subcuenta.cuenta}" required="false"
+                                             requiredMessage="Campo requerido" />
+                                <p:message for="cta" />
+
+                                <p:outputLabel for="scta" value="SUBCUENTA" />
+                                <p:inputText id="scta"
+                                             value="#{subcuenta.subcuenta.subcuenta}" required="false"
+                                             requiredMessage="Campo requerido" />
+                                <p:message for="scta" />
+
+                                <p:outputLabel for="banco" value="BANCO" />
+                                <p:inputText id="banco"
+                                             value="#{subcuenta.subcuenta.banco}" required="false"
+                                             requiredMessage="Campo requerido" />
+                                <p:message for="banco" />
+
+                                <p:outputLabel for="ctagastos" value="CUENTA GASTOS" />
+                                <p:inputText id="ctagastos"
+                                             value="#{subcuenta.subcuenta.cuentaGastos}" required="false"
+                                             requiredMessage="Campo requerido" />
+                                <p:message for="ctagastos" />
+
+                                <p:commandButton icon="pi pi-save" title="Guardar"
+                                                 rendered="#{subcuenta.subcuenta.idsubcuenta.toString()=='0'}"
+                                                 update="frmPrincipal, msgs"
+                                                 actionListener="#{subcuenta.guardar()}"
+                                                 />
+
+                                <p:commandButton icon="pi pi-replay" title="Actualizar"
+                                                 rendered="#{subcuenta.subcuenta.idsubcuenta.toString()!='0'}"
+                                                 actionListener="#{subcuenta.actualizar()}"
+                                                 update="messages, frmPrincipal" />
+
+                                <p:commandButton icon="pi pi-times" title="Cancelar" styleClass="rojo"
+                                                 rendered="#{subcuenta.subcuenta.idsubcuenta.toString()!='0'}"
+                                                 onclick="location.reload()"/>
+                                <p:growl id="messages" showDetail="true" keepAlive="true" />
+                            </h:panelGrid>
+
+                        </p:fieldset>
+                        <br></br>
+
+                        <p:fieldset legend="Lista de subcuentas " toggleable="true" toggleSpeed="500">
+
+                            <h:panelGrid columns="2" cellpadding="10">
+                                <p:dataTable id="tblPrincipal" paginator="true" rows="10"
+                                             style="font-size: 12px;" sortMode="multiple"
+                                             paginatorPosition="top" var="item" scrollable="true"
+                                             scrollHeight="435"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             rowsPerPageTemplate="10,20,50,100,200,500" reflow="true"
+                                             onRowClick="" rowHover="true" resizeMode="fit"
+                                             value="#{subcuenta.listaSubcuenta}">
+                                    <p:ajax event="sort" skipChildren="false" />
+                                    <p:column  headerText="Id">
+                                        <h:outputText value="#{item.idsubcuenta}" />
+                                    </p:column>
+                                    <p:column filterBy="#{item.co}" headerText="CO">
+                                        <h:outputText value="#{item.co}" />
+                                    </p:column>
+                                    <p:column filterBy="#{item.companyName}" headerText="COMPANY NAME">
+                                        <h:outputText value="#{item.companyName}" />
+                                    </p:column>
+                                    <p:column headerText="CTR">
+                                        <h:outputText value="#{item.ctr}" />
+                                    </p:column>
+                                    <p:column headerText="CUENTA">
+                                        <h:outputText value="#{item.cuenta}" />
+                                    </p:column>
+                                    <p:column headerText="SUBCUENTA">
+                                        <h:outputText value="#{item.subcuenta}" />
+                                    </p:column>
+                                    <p:column headerText="BANCO">
+                                        <h:outputText value="#{item.banco}" />
+                                    </p:column>
+                                    <p:column headerText="CUENTA GASTOS">
+                                        <h:outputText value="#{item.cuentaGastos}" />
+                                    </p:column>
+                                    <p:column headerText="Editar">
+                                        <p:commandButton id="btn" icon="pi pi-pencil" title="Actualizar"
+                                                         update="frmPrincipal" styleClass="verde">
+                                            <f:setPropertyActionListener value="#{item}"
+                                                                         target="#{subcuenta.subcuenta}" />
+
+                                        </p:commandButton>
+                                    </p:column>
+
+                                </p:dataTable>
+
+                            </h:panelGrid>
+
+                        </p:fieldset>
+                    </div>
+                </h:form>
+
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

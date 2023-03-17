@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>PROVEEDORES</h:head>
+    <body>
+        <ui:composition template="/template/Template.xhtml">
+
+            <ui:define name="content">
+
+                <h:form id="frmPrincipal">
+                    <p:growl id="msgs" showDetail="true"
+                             skipDetailIfEqualsSummary="true" />
+
+                    <div class="card">
+
+                        <p:fieldset legend="Lista de XML" toggleable="true" toggleSpeed="500">
+
+                            <h:panelGrid columns="2" cellpadding="10">
+                                <p:dataTable id="tblPrincipal" paginator="true" rows="10"
+                                             style="font-size: 12px;" sortMode="multiple"
+                                             paginatorPosition="top" var="item" scrollable="true"
+                                             scrollHeight="435"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             rowsPerPageTemplate="10,20,50,100,200,500" reflow="true"
+                                             onRowClick="" rowHover="true" resizeMode="fit"
+                                             value="#{factura.listaFactura}">
+                                    <p:ajax event="sort" skipChildren="false" />
+                                    <p:column headerText="Id">
+                                        <h:outputText value="#{item.idFactura}" />
+                                    </p:column>
+                                    <p:column headerText="Folio usuario">
+                                        <h:outputText value="#{item.folioUsuario}" />
+                                    </p:column>
+
+                                    <p:column headerText="UUID">
+                                        <h:outputText value="#{item.uuid}" />
+                                    </p:column>
+                                    <p:column headerText="RFC">
+                                        <h:outputText value="#{item.rfc}" />
+                                    </p:column>
+                                    <p:column filterBy="#{item.nombre}" headerText="Nombre Emisor">
+                                        <h:outputText value="#{item.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Total">
+                                        <h:outputText value="#{item.totalmxn}" />
+                                    </p:column>
+                                    <p:column headerText="Importe">
+                                        <h:outputText value="#{item.importe}" />
+                                    </p:column>
+                                    <p:column headerText="Moneda">
+                                        <h:outputText value="#{item.modenda}" />
+                                    </p:column>
+                                    <p:column headerText="Factura">
+                                        <h:outputText value="#{item.factura}" />
+                                    </p:column>
+
+                                    <p:column headerText="Borrar">
+                                        <p:commandButton id="btn" icon="pi pi-trash" title="Borrar"
+                                                         actionListener="#{factura.borrarFacturaYConcepto(item)}"
+                                                         update="frmPrincipal" styleClass="rojo">
+                                            <f:setPropertyActionListener value="#{item}"
+                                                                         target="#{factura.factura}" />
+
+                                        </p:commandButton>
+                                    </p:column>
+
+                                </p:dataTable>
+
+                            </h:panelGrid>
+
+                        </p:fieldset>
+                    </div>
+                </h:form>
+
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

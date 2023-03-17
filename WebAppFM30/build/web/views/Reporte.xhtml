@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/Template.xhtml">
+
+            <ui:define name="content">
+
+                <!--Formulario principal-->
+
+                <h:form id="frmPrincipal">
+                    <p:growl id="msgs" showDetail="true"
+                             skipDetailIfEqualsSummary="true" />
+
+                    <div style="text-align: center">
+                        <p:badge value="REPORTE DE RELACIÓN DE GASTOS" styleClass="etiqueta" />
+
+                    </div>
+                    <br></br>  <br></br>
+                    <p:toolbar>
+                        <p:toolbarGroup>
+                            <p:calendar id="f1" value="#{reporte.fecha1}" 
+                                        placeholder="Fecha inicial" 
+                                        mode="popup" 
+                                        showOn="button" 
+                                        styleClass="etiqueta"/> 
+                            <p:spacer width="20"/>
+                            <p:calendar id="f2" value="#{reporte.fecha2}" 
+                                        placeholder="Fecha final" 
+                                        mode="popup" 
+                                        showOn="button" 
+                                        styleClass="etiqueta"/> 
+                            <p:spacer width="20"/>
+                            <p:commandButton value="Buscar" 
+                                             icon="pi pi-search" 
+                                             styleClass="etiqueta"
+                                             update="frmPrincipal:tblCaptura"
+                                             actionListener="#{reporte.datosListaReporte()}"/>
+                            <p:spacer width="20"/>
+                            <p:commandButton value="Descargar reporte" 
+                                             icon="pi pi-download" 
+                                             styleClass="etiqueta flamePea">
+                                <p:dataExporter type="xls" 
+                                                target="tblCaptura" 
+                                                fileName="reporte"/>
+                            </p:commandButton>
+                        </p:toolbarGroup>
+                    </p:toolbar>
+
+
+
+                    <br></br>
+                    <br></br>
+                    <p:dataTable id="tblCaptura" styleClass="tabla p-mt-2"
+                                 style="height: 250px;"
+                                 paginator="true"
+                                 paginatorPosition="top"
+                                 var="c" 
+                                 value="#{reporte.lista}" 
+                                 emptyMessage="NO HAY REGISTROS AGREGADOS">
+
+                        <p:column headerText="Fecha de Entrega">
+                            <h:outputText value="#{c.fechaCaptura}"/>
+                        </p:column>
+
+                        <p:column headerText="Fecha de Pago">
+                            <h:outputText value="#{c.fecha}"/>
+                        </p:column>
+
+                        <p:column headerText="Solicitante">
+                            <h:outputText value="#{c.usuario.nombre}"/>
+                        </p:column>
+
+                        <p:column headerText="Autoriza">
+                            <h:outputText value=""/>
+                        </p:column>
+
+                        <p:column headerText="Beneficiario">
+                            <h:outputText value="#{c.pagarA}"/>
+                        </p:column>
+
+                        <p:column headerText="Concepto">
+                            <h:outputText value="#{c.conceptoGasto}"/>
+                        </p:column>
+
+                        <p:column headerText="Depto">
+                            <h:outputText value="#{c.usuario.departamento}"/>
+                        </p:column>
+
+                        <p:column headerText="Cuenta">
+                            <h:outputText value="#{c.usuario.cuenta}"/>
+                        </p:column>
+
+                        <p:column headerText="Sub Cuenta">
+                            <h:outputText value="#{c.usuario.subcuenta}"/>
+                        </p:column>
+
+                        <p:column headerText="REFERENCE NO.">
+                            <h:outputText value="#{c.referenceNo}"/>
+                        </p:column>
+
+                        <p:column headerText="Importe">
+                            <h:outputText value="#{c.importeTotalMx}">
+                                <f:convertNumber type="currency" currencySymbol="$"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Subtotal">
+                            <h:outputText value="#{c.subtotal}"/>
+                        </p:column>
+
+                        <p:column headerText="Moneda">
+                            <h:outputText value="#{c.currency}"/>
+                        </p:column>
+
+                        <p:column headerText="Banco">
+                            <h:outputText value="#{c.bancoBeneficiario}"/>
+                        </p:column>
+
+                    </p:dataTable>
+
+                </h:form>
+
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

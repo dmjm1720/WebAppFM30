@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>USUARIOS</h:head>
+    <body>
+        <ui:composition template="/template/Template.xhtml">
+
+            <ui:define name="content">
+
+                <h:form id="frmPrincipal">
+                    <p:growl id="msgs" showDetail="true"
+                             skipDetailIfEqualsSummary="true" />
+                    <div style="text-align: center">
+                        <p:badge value="MÓDULO DE USUARIOS"  styleClass="rojo etiqueta" />
+                    </div>
+                    <div class="card">
+                        <p:fieldset legend="Usuarios | Agregar / Editar " toggleable="true" toggleSpeed="500" style="background-color: #EAECEE; color: #154360;">
+                            <h:panelGrid  columns="12" cellpadding="4">
+                                <p:outputLabel
+                                    value="#{usuario.usuario.idusuario}"
+                                    style="color: #EAECEE" />
+
+                                <p:outputLabel for="nombre" value="Nombre del usuario" />
+                                <p:inputText id="nombre"
+                                             value="#{usuario.usuario.nombre}" required="false"
+                                             requiredMessage="Campo requerido" />
+                                <p:message for="nombre" />
+
+                                <p:outputLabel for="correo" value="Correo" />
+                                <p:inputText id="correo" validatorMessage="Correo inválido"
+                                             value="#{usuario.usuario.correo}" required="false"
+                                             requiredMessage="Campo requerido" >
+                                </p:inputText>
+                                <p:message for="correo" />
+
+                                <p:outputLabel for="clave" value="Clave de usuario" />
+                                <p:inputText id="clave"
+                                             value="#{usuario.usuario.clave}" required="false"
+                                             requiredMessage="Campo requerido" />
+                                <p:message for="clave" />
+
+                                <p:outputLabel for="subcuenta" value="Subcuenta" />
+                                <p:inputText id="subcuenta"
+                                             value="#{usuario.usuario.subcuenta}" required="false"
+                                             requiredMessage="Campo requerido" />
+                                <p:message for="subcuenta" />
+
+                                <p:outputLabel for="depto" value="Departamento" />
+                                <p:inputText id="depto"
+                                             value="#{usuario.usuario.departamento}" required="false"
+                                             requiredMessage="Campo requerido" />
+                                <p:message for="depto" />
+
+                                <p:outputLabel for="clavedep" value="Clave Departamento" />
+                                <p:inputText id="clavedep"
+                                             value="#{usuario.usuario.claveDepartamento}" required="false"
+                                             requiredMessage="Campo requerido" />
+                                <p:message for="clavedep" />
+
+                                <p:outputLabel for="cambiar" value="Cambiar contraseña" />
+                                <p:selectBooleanCheckbox id="cambiar" value="#{usuario.bandera}" itemLabel=""/>
+                                <p:message for="cambiar" />
+
+                                <p:outputLabel for="perfil" value="Perfil" />
+                                <p:selectOneMenu id="perfil" value="#{usuario.perfilUsuario.idperfil}"> 
+                                    <f:selectItem itemLabel="Selecciona perfil" itemValue="0"/>
+                                    <f:selectItem itemLabel="Usuario" itemValue="2"/>
+                                    <f:selectItem itemLabel="Administrador" itemValue="1"/>
+                                </p:selectOneMenu>
+                                <p:message for="perfil" />
+
+                                <p:commandButton icon="pi pi-save" title="Guardar"
+                                                 rendered="#{usuario.usuario.idusuario.toString()=='0'}"
+                                                 update="frmPrincipal, msgs"
+                                                 actionListener="#{usuario.guardar()}"
+                                                 />
+
+                                <p:commandButton icon="pi pi-replay" title="Actualizar"
+                                                 rendered="#{usuario.usuario.idusuario.toString()!='0'}"
+                                                 actionListener="#{usuario.actualizar()}"
+                                                 update="messages, frmPrincipal" />
+
+                                <p:commandButton icon="pi pi-times" title="Cancelar" styleClass="rojo"
+                                                 rendered="#{usuario.usuario.idusuario.toString()!='0'}"
+                                                 onclick="location.reload()"/>
+                                <p:growl id="messages" showDetail="true" keepAlive="true" />
+                            </h:panelGrid>
+
+                        </p:fieldset>
+                        <br></br>
+
+                        <p:fieldset legend="Lista de usuarios " toggleable="true" toggleSpeed="500">
+
+                            <h:panelGrid columns="2" cellpadding="10">
+                                <p:dataTable id="tblPrincipal" paginator="true" rows="10"
+                                             style="font-size: 10px;" sortMode="multiple"
+                                             paginatorPosition="top" var="item" scrollable="true"
+                                             scrollHeight="435"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             rowsPerPageTemplate="10,20,50,100,200,500" reflow="true"
+                                             onRowClick="" rowHover="true" resizeMode="fit"
+                                             value="#{usuario.listarUsuario}">
+                                    <p:ajax event="sort" skipChildren="false" />
+                                    <p:column  headerText="Id">
+                                        <h:outputText value="#{item.idusuario}" />
+                                    </p:column>
+                                    <p:column filterBy="#{item.nombre}" headerText="Nombre del usuario">
+                                        <h:outputText value="#{item.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Correo">
+                                        <h:outputText value="#{item.correo}" />
+                                    </p:column>
+                                    <p:column headerText="Clave">
+                                        <h:outputText value="#{item.clave}" />
+                                    </p:column>
+                                    <p:column headerText="Id Perfil">
+                                        <h:outputText value="#{item.perfil.idperfil}" />
+                                    </p:column>
+                                    <p:column headerText="Perfil">
+                                        <h:outputText value="#{item.perfil.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Subcuenta">
+                                        <h:outputText value="#{item.subcuenta}" />
+                                    </p:column>
+                                    <p:column headerText="Departamento">
+                                        <h:outputText value="#{item.departamento}" />
+                                    </p:column>
+                                    <p:column headerText="Clave departamento">
+                                        <h:outputText value="#{item.claveDepartamento}" />
+                                    </p:column>
+                                    <p:column headerText="Estado activación">
+                                        <h:outputText value="#{item.estado}" />
+                                    </p:column>
+                                    <p:column headerText="Editar">
+                                        <p:commandButton id="btn" icon="pi pi-pencil" title="Actualizar"
+                                                         update="frmPrincipal" styleClass="verde">
+                                            <f:setPropertyActionListener value="#{item}"
+                                                                         target="#{usuario.usuario}" />
+                                            <f:setPropertyActionListener value="#{item.perfil.idperfil}"
+                                                                         target="#{usuario.perfilUsuario.idperfil}" />
+
+                                        </p:commandButton>
+                                    </p:column>
+
+                                </p:dataTable>
+
+                            </h:panelGrid>
+
+                        </p:fieldset>
+                    </div>
+
+                </h:form>
+
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
